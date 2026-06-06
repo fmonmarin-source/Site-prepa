@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemmrétrie — Plateforme Prépa PT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #020408;
+    --deep: #060d1a;
+    --panel: #0a1628;
+    --surface: #0f1f38;
+    --border: #1a3a5c;
+    --accent: #00d4ff;
+    --accent2: #7b2fff;
+    --accent3: #00ff9d;
+    --text: #c8e0f0;
+    --text-dim: #4a7090;
+    --glow: rgba(0,212,255,0.15);
+    --glow2: rgba(123,47,255,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -20%;
+    width: 60%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(123,47,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(2,4,8,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    margin-top: -2px;
+  }
+
+  nav {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-btn {
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-dim);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s;
+    border-radius: 2px;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.06);
+    box-shadow: 0 0 12px rgba(0,212,255,0.1);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent3);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp .6s .2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp .6s .35s forwards;
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 60%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    max-width: 500px;
+    margin: 0 auto 48px;
+    opacity: 0;
+    animation: fadeUp .6s .5s forwards;
+  }
+
+  .hero-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    opacity: 0;
+    animation: fadeUp .6s .65s forwards;
+  }
+
+  .hero-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px 28px;
+    cursor: pointer;
+    transition: all .25s;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity .25s;
+  }
+
+  .hero-card.links::before { background: linear-gradient(90deg, var(--accent), transparent); }
+  .hero-card.exos::before  { background: linear-gradient(90deg, var(--accent2), transparent); }
+
+  .hero-card:hover {
+    border-color: rgba(0,212,255,0.4);
+    background: var(--surface);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px var(--glow);
+  }
+
+  .hero-card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .hero-card.exos .card-title { color: var(--accent2); }
+
+  .card-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .section-title .accent { color: var(--accent); }
+  .section-title .accent2 { color: var(--accent2); }
+
+  .btn-primary {
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover {
+    background: rgba(0,212,255,0.1);
+    box-shadow: 0 0 16px rgba(0,212,255,0.2);
+  }
+
+  .btn-primary.purple {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  .btn-primary.purple:hover {
+    background: rgba(123,47,255,0.1);
+    box-shadow: 0 0 16px rgba(123,47,255,0.2);
+  }
+
+  /* ── LINKS SECTION ── */
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .link-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .link-card::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .link-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    background: var(--surface);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 12px var(--glow);
+  }
+
+  .link-card:hover::after { opacity: 1; }
+
+  .link-cat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    text-transform: uppercase;
+  }
+
+  .link-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: .5px;
+  }
+
+  .link-url {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .link-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .link-btn {
+    padding: 5px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .15s;
+    border-radius: 2px;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .link-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .link-btn.del:hover { color: #ff4466; border-color: #ff4466; }
+
+  /* ── EXERCISES SECTION ── */
+  .exo-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    min-height: 500px;
+  }
+
+  .folder-tree {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .folder-tree-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .folder-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all .15s;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+  }
+
+  .folder-item:hover { color: var(--text); background: var(--surface); }
+  .folder-item.active {
+    color: var(--accent2);
+    border-color: rgba(123,47,255,0.3);
+    background: rgba(123,47,255,0.08);
+  }
+
+  .folder-icon { font-size: 14px; }
+  .folder-count {
+    margin-left: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--deep);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+
+  .folder-item.add-folder {
+    color: var(--accent2);
+    border: 1px dashed rgba(123,47,255,0.3);
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .folder-item.add-folder:hover {
+    background: rgba(123,47,255,0.08);
+    border-color: var(--accent2);
+  }
+
+  /* ── FILE PANEL ── */
+  .file-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  .file-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .file-panel-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase;
+  }
+
+  .files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .file-card {
+    background: var(--deep);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .file-card:hover {
+    border-color: rgba(123,47,255,0.5);
+    background: var(--surface);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 12px var(--glow2);
+  }
+
+  .file-type {
+    font-size: 36px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .file-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: .5px;
+    word-break: break-word;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+
+  .file-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .file-del {
+    position: absolute;
+    top: 6px; right: 6px;
+    background: rgba(255,68,102,0.1);
+    border: 1px solid rgba(255,68,102,0.2);
+    color: #ff4466;
+    font-size: 11px;
+    width: 22px; height: 22px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+  }
+
+  .file-card:hover .file-del { display: flex; }
+  .file-del:hover { background: rgba(255,68,102,0.2); }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 4px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .2s;
+    grid-column: 1 / -1;
+  }
+
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(123,47,255,0.05);
+  }
+
+  .drop-zone-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    width: 90%;
+    max-width: 480px;
+    position: relative;
+    animation: modalIn .2s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(.95) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .modal-title.purple { color: var(--accent2); }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--deep);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color .2s;
+    letter-spacing: .5px;
+  }
+
+  .form-input:focus { border-color: var(--accent); }
+  .form-input.purple:focus { border-color: var(--accent2); }
+
+  select.form-input { cursor: pointer; }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+  }
+
+  .btn-cancel:hover { border-color: #ff4466; color: #ff4466; }
+
+  /* ── IMAGE VIEWER ── */
+  .img-viewer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(16px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .img-viewer-overlay.open { display: flex; }
+
+  .img-viewer-overlay img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+  }
+
+  .img-viewer-close {
+    position: absolute;
+    top: 24px; right: 32px;
+    font-size: 28px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color .15s;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .img-viewer-close:hover { color: #ff4466; }
+
+  .img-viewer-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    grid-column: 1 / -1;
+  }
+
+  .empty-state-icon { font-size: 40px; margin-bottom: 16px; }
+  .empty-state-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── STATS ── */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-box {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+  }
+
+  .stat-box:nth-child(2) .stat-val { color: var(--accent2); }
+  .stat-box:nth-child(3) .stat-val { color: var(--accent3); }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--deep); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--panel);
+    border: 1px solid var(--accent3);
+    color: var(--accent3);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 12px 24px;
+    border-radius: 2px;
+    z-index: 9999;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all .3s;
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media (max-width: 768px) {
+    header { padding: 0 16px; }
+    main { padding: 24px 16px 60px; }
+    .exo-layout { grid-template-columns: 1fr; }
+    .stats-row { flex-direction: column; }
+    .folder-tree { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Gemmrétrie</div>
+    <div class="logo-sub">// Plateforme Prépa PT</div>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showSection('home')">Accueil</button>
+    <button class="nav-btn" onclick="showSection('links')">Liens</button>
+    <button class="nav-btn" onclick="showSection('exos')">Exercices</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ══ HOME ══ -->
+  <div class="section active" id="section-home">
+    <div class="hero">
+      <div class="hero-tag">// Système de ressources prépa PT</div>
+      <h1 class="hero-title"><span>Gemmrétrie</span></h1>
+      <p class="hero-desc">Centralise tes ressources, organise tes exercices, accède à tout depuis un seul endroit.</p>
+
+      <div class="stats-row" id="home-stats">
+        <div class="stat-box">
+          <span class="stat-val" id="stat-links">0</span>
+          <span class="stat-label">Liens sauvegardés</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val" id="stat-folders">0</span>
+          <span class="stat-label">Dossiers</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val" id="stat-files">0</span>
+          <span class="stat-label">Fichiers d'exercices</span>
+        </div>
+      </div>
+
+      <div class="hero-cards">
+        <div class="hero-card links" onclick="showSection('links')">
+          <span class="card-icon">🔗</span>
+          <div class="card-title">Liens & Ressources</div>
+          <p class="card-desc">Centralise tes sites favoris, cours en ligne, annales et ressources pédagogiques en un clic.</p>
+        </div>
+        <div class="hero-card exos" onclick="showSection('exos')">
+          <span class="card-icon">📐</span>
+          <div class="card-title">Exercices & Corrections</div>
+          <p class="card-desc">Organise tes exercices par matière et type dans des dossiers. Photos, PDFs et corrections accessibles instantanément.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LINKS ══ -->
+  <div class="section" id="section-links">
+    <div class="section-header">
+      <div class="section-title">🔗 <span class="accent">Liens</span> & Ressources</div>
+      <button class="btn-primary" onclick="openModal('link')">+ Ajouter un lien</button>
+    </div>
+    <div class="links-grid" id="links-grid">
+      <div class="empty-state" id="links-empty">
+        <div class="empty-state-icon">🛸</div>
+        <div class="empty-state-text">Aucun lien sauvegardé — commence par en ajouter un</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EXERCISES ══ -->
+  <div class="section" id="section-exos">
+    <div class="section-header">
+      <div class="section-title">📐 <span class="accent2">Exercices</span> & Corrections</div>
+      <button class="btn-primary purple" onclick="openModal('folder')">+ Nouveau dossier</button>
+    </div>
+    <div class="exo-layout">
+      <div class="folder-tree">
+        <div class="folder-tree-title">// Dossiers</div>
+        <div id="folder-list">
+          <div class="empty-state" style="padding:20px 0;font-size:12px;">
+            <div class="empty-state-icon" style="font-size:24px;">📁</div>
+            <div class="empty-state-text" style="font-size:10px;">Crée un dossier</div>
+          </div>
+        </div>
+      </div>
+      <div class="file-panel">
+        <div class="file-panel-header">
+          <div class="file-panel-title" id="current-folder-name">— Sélectionne un dossier</div>
+          <button class="btn-primary purple" id="add-file-btn" onclick="triggerFileUpload()" style="display:none">+ Ajouter des fichiers</button>
+        </div>
+        <div class="files-grid" id="files-grid">
+          <div class="empty-state" id="files-empty" style="padding:40px 20px;">
+            <div class="empty-state-icon">📂</div>
+            <div class="empty-state-text">Sélectionne ou crée un dossier pour commencer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ MODAL: LIEN ══ -->
+<div class="modal-overlay" id="modal-link">
+  <div class="modal">
+    <div class="modal-title">🔗 Ajouter un lien</div>
+    <div class="form-group">
+      <label class="form-label">Titre du lien</label>
+      <input class="form-input" id="link-title" type="text" placeholder="ex: Cours de maths MPSI">
+    </div>
+    <div class="form-group">
+      <label class="form-label">URL</label>
+      <input class="form-input" id="link-url" type="url" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Catégorie</label>
+      <select class="form-input" id="link-cat">
+        <option value="Mathématiques">Mathématiques</option>
+        <option value="Physique">Physique</option>
+        <option value="Chimie">Chimie</option>
+        <option value="Informatique">Informatique</option>
+        <option value="Annales">Annales</option>
+        <option value="Cours">Cours</option>
+        <option value="Vidéos">Vidéos</option>
+        <option value="Autre">Autre</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal('link')">Annuler</button>
+      <button class="btn-primary" onclick="addLink()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: DOSSIER ══ -->
+<div class="modal-overlay" id="modal-folder">
+  <div class="modal">
+    <div class="modal-title purple">📁 Créer un dossier</div>
+    <div class="form-group">
+      <label class="form-label">Nom du dossier</label>
+      <input class="form-input purple" id="folder-name" type="text" placeholder="ex: Intégrales • Cinétique • DS n°3">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Matière</label>
+      <select class="form-input purple" id="folder-subject">
+        <option value="📐 Maths">📐 Maths</option>
+        <option value="⚛️ Physique">⚛️ Physique</option>
+        <option value="🧪 Chimie">🧪 Chimie</option>
+        <option value="💻 Informatique">💻 Informatique</option>
+        <option value="📝 DS / Colles">📝 DS / Colles</option>
+        <option value="📚 Autre">📚 Autre</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal('folder')">Annuler</button>
+      <button class="btn-primary purple" onclick="addFolder()">Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IMAGE VIEWER ══ -->
+<div class="img-viewer-overlay" id="img-viewer">
+  <span class="img-viewer-close" onclick="closeImgViewer()">✕</span>
+  <div class="img-viewer-name" id="img-viewer-name"></div>
+  <img id="img-viewer-img" src="" alt="">
+</div>
+
+<!-- ══ HIDDEN FILE INPUT ══ -->
+<input type="file" id="file-input" multiple accept="image/*,.pdf" style="display:none" onchange="handleFileUpload(event)">
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+let state = {
+  links: JSON.parse(localStorage.getItem('gmr-links') || '[]'),
+  folders: JSON.parse(localStorage.getItem('gmr-folders') || '[]'),
+  currentFolder: null
+};
+
+// ── FILES: stored as base64 in localStorage ──
+function getFiles(folderId) {
+  return JSON.parse(localStorage.getItem('gmr-files-' + folderId) || '[]');
+}
+
+function saveFiles(folderId, files) {
+  localStorage.setItem('gmr-files-' + folderId, JSON.stringify(files));
+}
+
+function save() {
+  localStorage.setItem('gmr-links', JSON.stringify(state.links));
+  localStorage.setItem('gmr-folders', JSON.stringify(state.folders));
+  updateStats();
+}
+
+// ── NAVIGATION ──
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const idx = ['home','links','exos'].indexOf(name);
+  btns[idx].classList.add('active');
+  if (name === 'links') renderLinks();
+  if (name === 'exos') renderFolders();
+  if (name === 'home') updateStats();
+}
+
+// ── STATS ──
+function updateStats() {
+  document.getElementById('stat-links').textContent = state.links.length;
+  document.getElementById('stat-folders').textContent = state.folders.length;
+  let totalFiles = 0;
+  state.folders.forEach(f => { totalFiles += getFiles(f.id).length; });
+  document.getElementById('stat-files').textContent = totalFiles;
+}
+
+// ── MODAL ──
+function openModal(type) {
+  document.getElementById('modal-' + type).classList.add('open');
+  setTimeout(() => {
+    const inp = document.getElementById(type === 'link' ? 'link-title' : 'folder-name');
+    if (inp) inp.focus();
+  }, 100);
+}
+
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ── LINKS ──
+function addLink() {
+  const title = document.getElementById('link-title').value.trim();
+  const url = document.getElementById('link-url').value.trim();
+  const cat = document.getElementById('link-cat').value;
+  if (!title || !url) { toast('Remplis le titre et l\'URL !'); return; }
+
+  let u = url;
+  if (!u.startsWith('http')) u = 'https://' + u;
+
+  state.links.unshift({ id: Date.now(), title, url: u, cat, date: new Date().toLocaleDateString('fr') });
+  save();
+  renderLinks();
+  closeModal('link');
+  document.getElementById('link-title').value = '';
+  document.getElementById('link-url').value = '';
+  toast('Lien sauvegardé ✓');
+}
+
+function deleteLink(id) {
+  state.links = state.links.filter(l => l.id !== id);
+  save();
+  renderLinks();
+  toast('Lien supprimé');
+}
+
+function renderLinks() {
+  const grid = document.getElementById('links-grid');
+  const empty = document.getElementById('links-empty');
+  grid.innerHTML = '';
+
+  if (!state.links.length) {
+    grid.innerHTML = `<div class="empty-state" id="links-empty">
+      <div class="empty-state-icon">🛸</div>
+      <div class="empty-state-text">Aucun lien sauvegardé — commence par en ajouter un</div>
+    </div>`;
+    return;
+  }
+
+  state.links.forEach(link => {
+    const card = document.createElement('div');
+    card.className = 'link-card';
+    card.innerHTML = `
+      <div class="link-cat">${link.cat}</div>
+      <div class="link-title">${esc(link.title)}</div>
+      <div class="link-url">${esc(link.url)}</div>
+      <div class="link-actions">
+        <a class="link-btn" href="${link.url}" target="_blank" rel="noopener">Ouvrir →</a>
+        <button class="link-btn del" onclick="deleteLink(${link.id})">Supprimer</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── FOLDERS ──
+function addFolder() {
+  const name = document.getElementById('folder-name').value.trim();
+  const subject = document.getElementById('folder-subject').value;
+  if (!name) { toast('Donne un nom au dossier !'); return; }
+
+  const folder = { id: Date.now(), name, subject };
+  state.folders.push(folder);
+  save();
+  renderFolders();
+  closeModal('folder');
+  document.getElementById('folder-name').value = '';
+  toast('Dossier créé ✓');
+}
+
+function deleteFolder(id) {
+  if (!confirm('Supprimer ce dossier et tous ses fichiers ?')) return;
+  state.folders = state.folders.filter(f => f.id !== id);
+  localStorage.removeItem('gmr-files-' + id);
+  if (state.currentFolder === id) {
+    state.currentFolder = null;
+    document.getElementById('current-folder-name').textContent = '— Sélectionne un dossier';
+    document.getElementById('add-file-btn').style.display = 'none';
+    document.getElementById('files-grid').innerHTML = `
+      <div class="empty-state" id="files-empty" style="padding:40px 20px;">
+        <div class="empty-state-icon">📂</div>
+        <div class="empty-state-text">Sélectionne ou crée un dossier pour commencer</div>
+      </div>`;
+  }
+  save();
+  renderFolders();
+  toast('Dossier supprimé');
+}
+
+function renderFolders() {
+  const list = document.getElementById('folder-list');
+  list.innerHTML = '';
+
+  if (!state.folders.length) {
+    list.innerHTML = `<div class="empty-state" style="padding:20px 0;font-size:12px;">
+      <div class="empty-state-icon" style="font-size:24px;">📁</div>
+      <div class="empty-state-text" style="font-size:10px;">Crée un dossier</div>
+    </div>`;
+    return;
+  }
+
+  state.folders.forEach(f => {
+    const files = getFiles(f.id);
+    const item = document.createElement('div');
+    item.className = 'folder-item' + (state.currentFolder === f.id ? ' active' : '');
+    item.innerHTML = `
+      <span class="folder-icon">📁</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</span>
+      <span class="folder-count">${files.length}</span>
+    `;
+    item.onclick = () => selectFolder(f.id);
+    item.oncontextmenu = (e) => { e.preventDefault(); deleteFolder(f.id); };
+    list.appendChild(item);
+  });
+}
+
+function selectFolder(id) {
+  state.currentFolder = id;
+  const folder = state.folders.find(f => f.id === id);
+  document.getElementById('current-folder-name').textContent = folder.subject + ' / ' + folder.name;
+  document.getElementById('add-file-btn').style.display = 'flex';
+  renderFolders();
+  renderFiles();
+}
+
+// ── FILES ──
+function triggerFileUpload() {
+  document.getElementById('file-input').click();
+}
+
+function handleFileUpload(event) {
+  if (!state.currentFolder) return;
+  const files = Array.from(event.target.files);
+  const existing = getFiles(state.currentFolder);
+
+  let processed = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      existing.push({
+        id: Date.now() + Math.random(),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: e.target.result,
+        date: new Date().toLocaleDateString('fr')
+      });
+      processed++;
+      if (processed === files.length) {
+        saveFiles(state.currentFolder, existing);
+        renderFiles();
+        renderFolders();
+        save();
+        toast(`${files.length} fichier(s) ajouté(s) ✓`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = '';
+}
+
+function deleteFile(folderId, fileId) {
+  const files = getFiles(folderId).filter(f => f.id !== fileId);
+  saveFiles(folderId, files);
+  renderFiles();
+  renderFolders();
+  save();
+  toast('Fichier supprimé');
+}
+
+function renderFiles() {
+  const grid = document.getElementById('files-grid');
+  grid.innerHTML = '';
+
+  if (!state.currentFolder) return;
+  const files = getFiles(state.currentFolder);
+
+  // Drop zone
+  const dz = document.createElement('div');
+  dz.className = 'drop-zone';
+  dz.innerHTML = `<span class="drop-zone-icon">⬆</span>Glisse tes fichiers ici ou clique pour en ajouter`;
+  dz.onclick = triggerFileUpload;
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('dragover');
+    const dt = { files: e.dataTransfer.files };
+    handleDroppedFiles(dt.files);
+  });
+
+  if (!files.length) {
+    grid.appendChild(dz);
+    return;
+  }
+
+  files.forEach(file => {
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    const isPDF = file.type === 'application/pdf';
+    const icon = isPDF ? '📄' : '🖼️';
+    const sizeKB = Math.round(file.size / 1024);
+
+    card.innerHTML = `
+      <button class="file-del" onclick="event.stopPropagation();deleteFile(${state.currentFolder},${file.id})">✕</button>
+      <span class="file-type">${icon}</span>
+      <div class="file-name">${esc(file.name)}</div>
+      <div class="file-meta">${sizeKB} Ko · ${file.date}</div>
+    `;
+
+    card.onclick = () => openFile(file);
+    grid.appendChild(card);
+  });
+
+  grid.appendChild(dz);
+}
+
+function handleDroppedFiles(files) {
+  if (!state.currentFolder) return;
+  const existing = getFiles(state.currentFolder);
+  let processed = 0;
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      existing.push({
+        id: Date.now() + Math.random(),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: e.target.result,
+        date: new Date().toLocaleDateString('fr')
+      });
+      processed++;
+      if (processed === files.length) {
+        saveFiles(state.currentFolder, existing);
+        renderFiles();
+        renderFolders();
+        save();
+        toast(`${files.length} fichier(s) ajouté(s) ✓`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function openFile(file) {
+  if (file.type.startsWith('image/')) {
+    document.getElementById('img-viewer-img').src = file.data;
+    document.getElementById('img-viewer-name').textContent = file.name;
+    document.getElementById('img-viewer').classList.add('open');
+  } else if (file.type === 'application/pdf') {
+    const w = window.open();
+    w.document.write(`<iframe src="${file.data}" style="width:100%;height:100vh;border:none"></iframe>`);
+  }
+}
+
+function closeImgViewer() {
+  document.getElementById('img-viewer').classList.remove('open');
+}
+
+document.getElementById('img-viewer').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('img-viewer')) closeImgViewer();
+});
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+    closeImgViewer();
+  }
+});
+
+// ── UTILS ──
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── INIT ──
+updateStats();
+</script>
+</body>
+</html>
